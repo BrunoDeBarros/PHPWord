@@ -41,7 +41,9 @@ class TestHelperDOCX
      *
      * @param \PhpOffice\PhpWord\PhpWord $phpWord
      * @param string $writerName
+     *
      * @return \PhpOffice\PhpWord\Tests\XmlDocument
+     *
      * @throws \PhpOffice\PhpWord\Exception\CreateTemporaryFileException
      */
     public static function getDocument(PhpWord $phpWord, $writerName = 'Word2007')
@@ -60,7 +62,7 @@ class TestHelperDOCX
 
         $zip = new \ZipArchive;
         $res = $zip->open(self::$file);
-        if ($res === true) {
+        if (true === $res) {
             $zip->extractTo(Settings::getTempDir() . '/PhpWord_Unit_Test/');
             $zip->close();
         }
@@ -89,12 +91,12 @@ class TestHelperDOCX
     public static function deleteDir($dir)
     {
         foreach (scandir($dir) as $file) {
-            if ($file === '.' || $file === '..') {
+            if ('.' === $file || '..' === $file) {
                 continue;
-            } elseif (is_file($dir . "/" . $file)) {
-                unlink($dir . "/" . $file);
-            } elseif (is_dir($dir . "/" . $file)) {
-                self::deleteDir($dir . "/" . $file);
+            } elseif (is_file($dir . '/' . $file)) {
+                unlink($dir . '/' . $file);
+            } elseif (is_dir($dir . '/' . $file)) {
+                self::deleteDir($dir . '/' . $file);
             }
         }
 

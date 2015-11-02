@@ -17,6 +17,7 @@
 namespace PhpOffice\PhpWord\Tests\Writer\Word2007\Part;
 
 use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\SimpleType\Jc;
 use PhpOffice\PhpWord\Tests\TestHelperDOCX;
 
 /**
@@ -40,18 +41,18 @@ class FootnotesTest extends \PHPUnit_Framework_TestCase
     public function testWriteFootnotes()
     {
         $phpWord = new PhpWord();
-        $phpWord->addParagraphStyle('pStyle', array('align' => 'left'));
+        $phpWord->addParagraphStyle('pStyle', array('alignment' => Jc::START));
         $section = $phpWord->addSection();
-        $section->addText('Text');
+        $section->addText(htmlspecialchars('Text', ENT_COMPAT, 'UTF-8'));
         $footnote1 = $section->addFootnote('pStyle');
-        $footnote1->addText('Footnote');
+        $footnote1->addText(htmlspecialchars('Footnote', ENT_COMPAT, 'UTF-8'));
         $footnote1->addTextBreak();
-        $footnote1->addLink('http://google.com');
-        $footnote2 = $section->addEndnote(array('align' => 'left'));
-        $footnote2->addText('Endnote');
+        $footnote1->addLink('https://github.com/PHPOffice/PHPWord');
+        $footnote2 = $section->addEndnote(array('alignment' => Jc::START));
+        $footnote2->addText(htmlspecialchars('Endnote', ENT_COMPAT, 'UTF-8'));
         $doc = TestHelperDOCX::getDocument($phpWord);
 
-        $this->assertTrue($doc->elementExists("/w:document/w:body/w:p/w:r/w:footnoteReference"));
-        $this->assertTrue($doc->elementExists("/w:document/w:body/w:p/w:r/w:endnoteReference"));
+        $this->assertTrue($doc->elementExists('/w:document/w:body/w:p/w:r/w:footnoteReference'));
+        $this->assertTrue($doc->elementExists('/w:document/w:body/w:p/w:r/w:endnoteReference'));
     }
 }

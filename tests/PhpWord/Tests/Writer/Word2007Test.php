@@ -17,6 +17,7 @@
 namespace PhpOffice\PhpWord\Tests\Writer;
 
 use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\SimpleType\Jc;
 use PhpOffice\PhpWord\Tests\TestHelperDOCX;
 use PhpOffice\PhpWord\Writer\Word2007;
 
@@ -44,17 +45,17 @@ class Word2007Test extends \PHPUnit_Framework_TestCase
 
         $writerParts = array(
             'ContentTypes' => 'ContentTypes',
-            'Rels' => 'Rels',
-            'DocPropsApp' => 'DocPropsApp',
-            'Document' => 'Document',
-            'Styles' => 'Styles',
-            'Numbering' => 'Numbering',
-            'Settings' => 'Settings',
-            'WebSettings' => 'WebSettings',
-            'Header' => 'Header',
-            'Footer' => 'Footer',
-            'Footnotes' => 'Footnotes',
-            'Endnotes' => 'Footnotes',
+            'Rels'         => 'Rels',
+            'DocPropsApp'  => 'DocPropsApp',
+            'Document'     => 'Document',
+            'Styles'       => 'Styles',
+            'Numbering'    => 'Numbering',
+            'Settings'     => 'Settings',
+            'WebSettings'  => 'WebSettings',
+            'Header'       => 'Header',
+            'Footer'       => 'Footer',
+            'Footnotes'    => 'Footnotes',
+            'Endnotes'     => 'Footnotes',
         );
         foreach ($writerParts as $part => $type) {
             $this->assertInstanceOf(
@@ -77,23 +78,23 @@ class Word2007Test extends \PHPUnit_Framework_TestCase
         $remoteImage = 'http://php.net//images/logos/php-med-trans-light.gif';
         $phpWord = new PhpWord();
         $phpWord->addFontStyle('Font', array('size' => 11));
-        $phpWord->addParagraphStyle('Paragraph', array('align' => 'center'));
+        $phpWord->addParagraphStyle('Paragraph', array('alignment' => Jc::CENTER));
         $section = $phpWord->addSection();
-        $section->addText('Test 1', 'Font', 'Paragraph');
+        $section->addText(htmlspecialchars('Test 1', ENT_COMPAT, 'UTF-8'), 'Font', 'Paragraph');
         $section->addTextBreak();
-        $section->addText('Test 2');
+        $section->addText(htmlspecialchars('Test 2', ENT_COMPAT, 'UTF-8'));
         $section = $phpWord->addSection();
         $textrun = $section->addTextRun();
-        $textrun->addText('Test 3');
+        $textrun->addText(htmlspecialchars('Test 3', ENT_COMPAT, 'UTF-8'));
         $footnote = $textrun->addFootnote();
-        $footnote->addLink('http://test.com');
+        $footnote->addLink('https://github.com/PHPOffice/PHPWord');
         $header = $section->addHeader();
         $header->addImage($localImage);
         $footer = $section->addFooter();
         $footer->addImage($remoteImage);
 
         $writer = new Word2007($phpWord);
-        $file = __DIR__ . "/../_files/temp.docx";
+        $file = __DIR__ . '/../_files/temp.docx';
         $writer->save($file);
 
         $this->assertTrue(file_exists($file));
@@ -108,13 +109,13 @@ class Word2007Test extends \PHPUnit_Framework_TestCase
     {
         $phpWord = new PhpWord();
         $section = $phpWord->addSection();
-        $section->addText('Test');
+        $section->addText(htmlspecialchars('Test', ENT_COMPAT, 'UTF-8'));
         $footnote = $section->addFootnote();
-        $footnote->addText('Test');
+        $footnote->addText(htmlspecialchars('Test', ENT_COMPAT, 'UTF-8'));
 
         $writer = new Word2007($phpWord);
         $writer->setUseDiskCaching(true);
-        $file = __DIR__ . "/../_files/temp.docx";
+        $file = __DIR__ . '/../_files/temp.docx';
         $writer->save($file);
 
         $this->assertTrue(file_exists($file));
@@ -142,7 +143,7 @@ class Word2007Test extends \PHPUnit_Framework_TestCase
         }
 
         $doc = TestHelperDOCX::getDocument($phpWord);
-        $mediaPath = $doc->getPath() . "/word/media";
+        $mediaPath = $doc->getPath() . '/word/media';
 
         foreach ($images as $source => $target) {
             $this->assertFileEquals(
@@ -183,10 +184,7 @@ class Word2007Test extends \PHPUnit_Framework_TestCase
      */
     public function testSetUseDiskCachingException()
     {
-        $dir = join(
-            DIRECTORY_SEPARATOR,
-            array(PHPWORD_TESTS_BASE_DIR, 'foo')
-        );
+        $dir = join(DIRECTORY_SEPARATOR, array(PHPWORD_TESTS_BASE_DIR, 'foo'));
 
         $object = new Word2007();
         $object->setUseDiskCaching(true, $dir);
